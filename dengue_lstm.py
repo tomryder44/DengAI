@@ -38,10 +38,9 @@ def lstm_gridsearch(x, x_test, y, y_test, scaler):
     alpha_list = np.linspace(10**-2, 10**1, 10)
     scores = []
     optimal_value_found = False
-    poo = alpha_list
     while optimal_value_found is False:
             scores = []
-            for alpha in poo:
+            for alpha in alpha_list:
                 model = Sequential()
                 model.add(LSTM(200, input_shape=(1, x.shape[1]),
                     kernel_regularizer=l2(alpha), 
@@ -66,9 +65,9 @@ def lstm_gridsearch(x, x_test, y, y_test, scaler):
                     best_score = score
                     best_alpha = alpha
                     best_predictions = predictions
-                if alpha == poo[-1]:  
+                if alpha == alpha_list[-1]:  
                     # plot results of grid search, checks that range is correct
-                    plt.plot(poo, scores)
+                    plt.plot(alpha_list, scores)
                     plt.title('Grid search results for LSTM')
                     plt.xlabel('Alpha')
                     plt.ylabel('MAE')
@@ -77,7 +76,7 @@ def lstm_gridsearch(x, x_test, y, y_test, scaler):
                     # range and carry out new search
                     if min(scores) == scores[-1]:
                         print('Optimal value not found. Restarting grid search with new range')
-                        poo = np.linspace(poo[-1], (poo[-1])*2, len(poo))
+                        alpha_list = np.linspace(alpha_list[-1], (alpha_list[-1])*2, len(alpha_list))
                     else:
                         optimal_value_found = True
         
