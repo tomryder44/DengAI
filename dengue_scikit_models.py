@@ -48,10 +48,10 @@ def select_model(x, x_test, y, y_test, models, grids, scaler):
         is_mlp = isinstance(model, MLPRegressor)
         best_model_score = 1000 # lowest MAE for all models for each type of model
         optimal_value_found = False
-        poo = grid[named_param]
+        g = grid[named_param]
         while optimal_value_found is False:
             scores = []
-            for value in poo:
+            for value in g:
                 param = {named_param:value}
                 model.set_params(**param) # set hyperparameter value
                 model.fit(x, y)
@@ -69,9 +69,9 @@ def select_model(x, x_test, y, y_test, models, grids, scaler):
                     best_predictions = predictions
                     best_model = model.get_params()
                 
-                if value == poo[-1]:  
+                if value == g[-1]:  
                     # plot results of grid search, checks that range is correct
-                    plt.plot(poo, scores)
+                    plt.plot(g, scores)
                     plt.title('Grid search results for %s' % model.__class__.__name__)
                     plt.xlabel(named_param)
                     plt.ylabel('MAE')
@@ -80,7 +80,7 @@ def select_model(x, x_test, y, y_test, models, grids, scaler):
                     # range and carry out new search
                     if min(scores) == scores[-1]:
                         print('Optimal value not found. Restarting grid search with new range')
-                        poo = np.linspace(poo[-1], (poo[-1])*2, len(poo)).astype(int)
+                        g = np.linspace(g[-1], (g[-1])*2, len(g)).astype(int)
                     else:
                         optimal_value_found = True
                 
